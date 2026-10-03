@@ -11,24 +11,18 @@ import asyncio
 import sys
 import traceback
 
-print("--- PYTHON RUNTIME INITIALIZED ---")
+import pygame
 
-try:
-    import pygame
-    from asteroid import Asteroid
-    from asteroidfield import AsteroidField
-    from circleshape import CircleShape
-    from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-    from player import Player
-    from shot import Shot
-    print("--- ALL MODULES IMPORTED SUCCESSFULLY ---")
-except Exception as e:
-    print("--- IMPORT ERROR ---")
-    traceback.print_exc()
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
+from circleshape import CircleShape
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from player import Player
+from shot import Shot
 
 
 async def main():
-    print("INITIALIZING DISPLAY...")
+    print("--- STARTING GAME LOOP ---")
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Asteroids")
@@ -49,7 +43,6 @@ async def main():
 
     dt = 0.0
 
-    print("STARTING MAIN GAME LOOP...")
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -79,5 +72,5 @@ async def main():
         await asyncio.sleep(0)
 
 
-if __name__ == "__main__":
-    asyncio.run(main())
+# Run directly whether executed as script or loaded by pygbag
+asyncio.run(main())
