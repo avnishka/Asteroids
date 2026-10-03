@@ -13,50 +13,74 @@ from shot import Shot
 
 
 async def main():
+    # 1. Initialize Pygame display first
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    clock = pygame.time.Clock()
+
     print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
 
+    # 2. Setup sprite groups
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
-    pygame.init()
-    clock = pygame.time.Clock()
-    dt = 0.0
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = updatable
     Shot.containers = (shots, updatable, drawable)
+
     player = Player(x=SCREEN_WIDTH / 2, y=SCREEN_HEIGHT / 2)
     asteroidfieldobject = AsteroidField()
 
+    dt = 0.0
+
     while True:
-        log_state()
+        # Wrap logging so WebAssembly filesystem errors don't crash the loop
+        try:
+            log_state()
+        except Exception:
+            pass
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+
         screen.fill("black")
         dt = clock.tick(60) / 1000
+
         for item in updatable:
             item.update(dt)
+
         for item in drawable:
             item.draw(screen)
-        pygame.display.flip()
+
         for item in asteroids:
             if item.collides_with(player):
-                log_event("player_hit")
+                try:
+                    log_event("player_hit")
+                except Exception:
+                    pass
                 print("Game over!")
-                sys.exit()
+                return  # Exit gracefully without sys.exit()
+
         for asteroid in asteroids:
             for shot in shots:
                 if asteroid.collides_with(shot):
-                    log_event("asteroid_shot")
+                    try:
+                        log_event("asteroid_shot")
+                    except Exception:
+                        pass
                     asteroid.split()
                     shot.kill()
 
-        await asyncio.sleep(0)  # Yield execution to the browser
+        pygame.display.flip()
+
+        # Let the browser process input and render frames
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
