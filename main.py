@@ -4,6 +4,9 @@
 # ]
 # ///
 
+import os
+os.environ["SDL_AUDIODRIVER"] = "dummy"
+
 import asyncio
 import sys
 
