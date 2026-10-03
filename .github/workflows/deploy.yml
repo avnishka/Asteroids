@@ -20,6 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -34,10 +37,18 @@ jobs:
         run: |
           python -m pygbag --build --archive --ume_block 0 .
 
+      - name: Verify output exists
+        run: |
+          ls -la
+          ls -la build
+          ls -la build/web
+          test -f build/web/index.html
+          find build/web -maxdepth 2 -type f | sort | sed -n '1,200p'
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'build/web'
+          path: ./build/web
 
   deploy:
     environment:
