@@ -1,3 +1,4 @@
+import asyncio
 import sys
 
 import pygame
@@ -11,7 +12,7 @@ from player import Player
 from shot import Shot
 
 
-def main():
+async def main():
     print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
@@ -30,6 +31,7 @@ def main():
     Shot.containers = (shots, updatable, drawable)
     player = Player(x=SCREEN_WIDTH / 2, y=SCREEN_HEIGHT / 2)
     asteroidfieldobject = AsteroidField()
+
     while True:
         log_state()
         for event in pygame.event.get():
@@ -54,6 +56,8 @@ def main():
                     asteroid.split()
                     shot.kill()
 
+        await asyncio.sleep(0)  # Yield execution to the browser
+
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
