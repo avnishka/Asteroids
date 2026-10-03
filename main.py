@@ -9,19 +9,26 @@ os.environ["SDL_AUDIODRIVER"] = "dummy"
 
 import asyncio
 import sys
+import traceback
 
-import pygame
+print("--- PYTHON RUNTIME INITIALIZED ---")
 
-from asteroid import Asteroid
-from asteroidfield import AsteroidField
-from circleshape import CircleShape
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from player import Player
-from shot import Shot
+try:
+    import pygame
+    from asteroid import Asteroid
+    from asteroidfield import AsteroidField
+    from circleshape import CircleShape
+    from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+    from player import Player
+    from shot import Shot
+    print("--- ALL MODULES IMPORTED SUCCESSFULLY ---")
+except Exception as e:
+    print("--- IMPORT ERROR ---")
+    traceback.print_exc()
 
 
 async def main():
-    print("INITIALIZING GAME ENGINE...")
+    print("INITIALIZING DISPLAY...")
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Asteroids")
@@ -42,7 +49,7 @@ async def main():
 
     dt = 0.0
 
-    print("ENTERING GAME LOOP...")
+    print("STARTING MAIN GAME LOOP...")
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

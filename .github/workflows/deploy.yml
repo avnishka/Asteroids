@@ -32,7 +32,7 @@ jobs:
 
       - name: Build WebAssembly distribution
         run: |
-          python -m pygbag --build --archive .
+          python -m pygbag --build --archive --ume_block 0 .
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
